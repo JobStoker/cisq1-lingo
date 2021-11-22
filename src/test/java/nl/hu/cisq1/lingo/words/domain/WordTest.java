@@ -14,4 +14,5 @@ class WordTest {
         int length = word.getLength();
         assertEquals(5, length);
     }
+
 }
