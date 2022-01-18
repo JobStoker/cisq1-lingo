@@ -20,7 +20,7 @@ public class Game {
 
     //Initalizing new game
     public Game(){
-        this.gameState = GameState.NEW;
+        this.gameState = GameState.NOT_STARTED;
         this.rounds = new ArrayList<>();
     }
 
