@@ -22,6 +22,12 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
         cache: maven
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v1
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
     - name: Cache Maven packages
       uses: actions/cache@v1
       with:
@@ -32,3 +38,8 @@ jobs:
       run: mvn -B package --file pom.xml -Dspring.profiles.active=ci
     - name: Run Tests
       run: mvn -B verify -Dspring.profiles.active=ci
+    - name: Analyze with SonarCloud
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
