@@ -6,4 +6,6 @@ public enum GameState implements Serializable {
     NOT_STARTED,
     LOST,
     PLAY,
+    WON,
+    WAIT,
 }

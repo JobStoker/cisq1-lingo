@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class HintTest {
-    private static Word word =  new Word("BAARD");
+    private static String word = "BAARD";
 
     @Test
     @DisplayName("Creating hint and test if hint is changed")
@@ -20,7 +20,7 @@ public class HintTest {
         List<LetterFeedback> letterFeedback = new ArrayList<LetterFeedback>(Arrays.asList(CORRECT, ABSENT, ABSENT, ABSENT, ABSENT));
 
         Hint hint = new Hint();
-        assertEquals(List.of('B', '.', '.', '.', '.'), hint.receiveHint(letterFeedback, word.getWord()));
+        assertEquals(List.of('B', '.', '.', '.', '.'), hint.receiveHint(letterFeedback, word).getHintList());
     }
 
     @Test
@@ -29,17 +29,17 @@ public class HintTest {
         List<LetterFeedback> letterFeedback = new ArrayList<LetterFeedback>(Arrays.asList(CORRECT, ABSENT, ABSENT, ABSENT, ABSENT));
 
         Hint hint = new Hint();
-        assertNotEquals(List.of('B', 'A', 'A', 'R', 'D'), hint.receiveHint(letterFeedback, word.getWord()));
+        assertNotEquals(List.of('B', 'A', 'A', 'R', 'D'), hint.receiveHint(letterFeedback, word).getHintList());
     }
 
     @Test
     @DisplayName("Test hint wiht invalid feedback")
     void hintWithInvalidFeedback(){
-        Word word =  new Word("BAARDEN");
+        String word = "BAARDEN";
 
         List<LetterFeedback> letterFeedback = new ArrayList<LetterFeedback>(Arrays.asList(INVALID, INVALID, INVALID, INVALID, INVALID));
 
         Hint hint = new Hint();
-        assertNotEquals(List.of('B', 'A', 'A', 'R', 'D'), hint.receiveHint(letterFeedback, word.getWord()));
+        assertNotEquals(List.of('B', 'A', 'A', 'R', 'D'), hint.receiveHint(letterFeedback, word));
     }
 }

@@ -1,22 +1,30 @@
 package nl.hu.cisq1.lingo.trainer.domain;
 
-import nl.hu.cisq1.lingo.words.application.WordService;
-
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
+@Entity(name = "game")
 public class Game {
 
+    @Id
+    @GeneratedValue
     private long id;
 
+    @Enumerated(value = EnumType.STRING)
+    @Column
     private GameState gameState;
 
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Round> rounds;
 
+    @Column
     private int score;
 
-    private int wordLength;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Hint hint;
+
+    private int wordLength = 5;
 
     //Initalizing new game
     public Game(){
@@ -24,19 +32,46 @@ public class Game {
         this.rounds = new ArrayList<>();
     }
 
-    public Round newRound(WordService wordService){
-        //WordService wordService = new WordService();
-
-        Round round = new Round();
-
+    public Round newRound(String word){
+        Round round = new Round(word);
+        this.gameState = GameState.PLAY;
+        rounds.add(round);
         return round;
     }
 
-    public int setScore(Round round){
+    public void attemptGuess(String attempt){
+        Round round = getCurrentRound();
+        round.guessWord(attempt);
+        this.hint = round.getHint();
+        if (round.checkIfWordGuessed() || round.getGuessCount() > 5) {
+            this.gameState = GameState.WAIT;
+        } else if (round.getGuessCount() < 5) {
+            this.gameState = GameState.PLAY;
+        }
+    }
+
+    private Round getCurrentRound() {
+        return this.rounds.get(rounds.size() - 1);
+    }
+
+    private void calculateScore(){
+        for (Round round : this.rounds){
+            this.score = this.score + 5 * (5 - round.getGuessCount()) + 5;
+        }
+    }
+
+    public int getScore(){
         return score;
     }
 
     public Progress createProgress(){
-        return null;
+        calculateScore();
+        return new Progress(this.id, this.score, this.gameState, this.hint, this.rounds);
     }
+
+    public List<Round> getRounds() {
+        return this.rounds;
+    }
+
+    public GameState getGameState() { return this.gameState; };
 }
