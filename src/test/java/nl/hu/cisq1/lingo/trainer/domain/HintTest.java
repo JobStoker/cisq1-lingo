@@ -40,6 +40,6 @@ public class HintTest {
         List<LetterFeedback> letterFeedback = new ArrayList<LetterFeedback>(Arrays.asList(INVALID, INVALID, INVALID, INVALID, INVALID));
 
         Hint hint = new Hint();
-        assertNotEquals(List.of('B', 'A', 'A', 'R', 'D'), hint.receiveHint(letterFeedback, word));
+        assertNotEquals(List.of('B', 'A', 'A', 'R', 'D'), hint.receiveHint(letterFeedback, word).getHintList());
     }
 }
